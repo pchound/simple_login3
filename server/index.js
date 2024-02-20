@@ -4,21 +4,49 @@ const mysql = require('mysql')
 const cors = require("cors");
 const bodyParser = require('body-parser')
 
+app.use(cors());
+app.use(express.json());
 
 const db = mysql.createPool({
   host: '127.0.0.1', // Use localhost or 127.0.0.1 as the hostname
   port: '3307',      // Specify the port number
   user: 'root',
   password: 'password',
-  database: 'crud_database',
+  database: 'loginsystem',
 });
+
+
+
+
+ /* const sqlInsert =
+    "INSERT INTO users (username, password) (?,?)";
+  db.query(sqlInsert,[username, password], (err, result) =>{
+    console.log(err);
+    res.send({
+      "success": true
+    })
+  });
+});*/
+
+app.post('/register', (req, res)=>{
+  const username = req.body.username;
+  const password = req.body.password;
+
+db.query(
+    "INSERT INTO users (username, password) VALUES (?,?)",
+  [username, password],
+   (err, result) => {
+    console.log(err);
+  }
+);
+})
 
 /*app.use(cors());
 app.use(express.json());*/
 
 //From the video
 
-app.use(cors());
+/*app.use(cors());
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: true}));
   app.post("/api/insert", (req, res) => {
