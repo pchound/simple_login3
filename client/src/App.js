@@ -7,14 +7,32 @@ function App(){
 const [usernameReg, setUsernameReg] = useState('');
 const [passwordReg, setPasswordReg] = useState('');
 
+const [username, setUsername] = useState('');
+const [password, setPassword] = useState('');
+
+const [loginStatus, setLoginStatus] = useState("");
+
 const register = () =>{
   axios.post('http://localhost:3001/register', {
     username: usernameReg,
     password: passwordReg
-  })
-  if (register.data.success){
-    alert("Inserted Successfully");
-  }
+  }).then((response)=> {
+    console.log(response);
+  });
+};
+
+const login = () =>{
+  axios.post('http://localhost:3001/login', {
+    username: username,
+    password: password
+  }).then((response)=> {
+    
+    if (response.data.message){
+        setLoginStatus(response.data.message);
+    }else{
+      setLoginStatus(response.data[0].username);
+    }
+  });
 };
 
   return(
@@ -36,15 +54,28 @@ const register = () =>{
             setPasswordReg(e.target.value);
            }}
            /><br></br>
-        <button onClick={register}>Register</button>
+        <button onClick={register}>Login</button>
       </div>
 
       <div className="login">
         <h1>Login</h1>
-        <input type="text" placeholder="Username..."/><br></br>
-        <input type="password" placeholder="Password..."/><br></br>
-        <button>Register</button>
+        <input
+        type="text"
+        placeholder="Username..."
+        onChange={(e) => {
+          setUsername(e.target.value);
+         }}
+        /><br></br>
+        <input
+        type="password" placeholder="Password..."
+        onChange={(e) => {
+          setPassword(e.target.value);
+         }}
+        /><br></br>
+        <button onClick={login}>Login</button>
       </div>
+
+      <h1>{loginStatus}</h1>
     </div>
 
  );

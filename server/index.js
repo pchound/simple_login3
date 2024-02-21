@@ -16,18 +16,6 @@ const db = mysql.createPool({
 });
 
 
-
-
- /* const sqlInsert =
-    "INSERT INTO users (username, password) (?,?)";
-  db.query(sqlInsert,[username, password], (err, result) =>{
-    console.log(err);
-    res.send({
-      "success": true
-    })
-  });
-});*/
-
 app.post('/register', (req, res)=>{
   const username = req.body.username;
   const password = req.body.password;
@@ -36,117 +24,33 @@ db.query(
     "INSERT INTO users (username, password) VALUES (?,?)",
   [username, password],
    (err, result) => {
-    console.log(err);
-  }
-);
-})
-
-/*app.use(cors());
-app.use(express.json());*/
-
-//From the video
-
-/*app.use(cors());
-app.use(express.json())
-app.use(bodyParser.urlencoded({extended: true}));
-  app.post("/api/insert", (req, res) => {
-  const movieName = req.body.movieName;
-  const movieReview = req.body.movieReview;
-
-  const sqlInsert =
-  "INSERT INTO movie_reviews (movieName, movieReview) VALUES (?,?)";//,
-  //[movieName, movieReview],
-  db.query(sqlInsert, [movieName, movieReview], (err, result) =>{
-    console.log(err);
-    res.send({
-      "success": true
-    })
-  });
-});
-
-/*db.query(
-  "INSERT INTO movie_reviews (movieName, movieReview) VALUES (?,?)",
-  [movieName, movieReview],
-  (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send("Values Inserted");
+    if (err){
+      res.send({err: err})
     }
   }
 );
-});*/
+});
 
-
-
-//-----------------------------------------------------------------------------------
-
-//Insert into movies
-/*app.post("/create", (req, res) => {
-  console.log("test", req.body)
-  const movieName = req.body.movieName;
-  const movieReview = req.body.movieReview;
+app.post('/login', (req, res) =>{
+  const username = req.body.username;
+  const password = req.body.password;
 
   db.query(
-    "INSERT INTO movie_reviews (movieName, movieReview) VALUES (?,?)",
-    [movieName, movieReview],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send("Values Inserted");
-      }
-    }
-  );
-});
-
-//Retrieve Movie results
-app.get("/movieReviews", (req, res) => {
-  db.query("SELECT * FROM movie_reviews", (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
+    "SELECT * FROM users WHERE username = ? AND password = ?",
+  [username, password],
+   (err, result) => {
+    if (err){
+      res.send({err: err})
+    } 
+  
+    if (result.length > 0) {
       res.send(result);
+    } else{
+      res.send({message: "Wrong username/password combination!"});
     }
-  });
+  }
+);
 });
-
-//Update movies
-app.put("/update", (req, res) => {
-  const id = req.body.id;
-  const movieName = req.body.movieName;
-  const movieReview = req.body.movieReview;
-  console.log("test", id, movieName, movieReview);
-  db.query(
-    "UPDATE movie_reviews SET movieName = ?, movieReview = ? WHERE id = ?",
-    [movieName,movieReview, id],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(result);
-      }
-    }
-  );
-});
-
-//Delete
-app.delete("/delete", (req, res) => {
-  const id = req.body.id;
-  db.query(
-    "DELETE FROM movie_reviews WHERE id = ?",
-    [id],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(result);
-      }
-    }
-  );
-});
-*/
-//app.get("/", (req, res) => {});
 
 const port = 3001;
 app.listen(port, () => {
